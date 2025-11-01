@@ -1,0 +1,310 @@
+================================================================================
+                        VOICE CHANNELS - FILE TREE
+================================================================================
+
+📦 aura-oasis/
+│
+├── 📄 VOICE_README.md              ⭐ START HERE - Main overview
+├── 📄 VOICE_SETUP.md               📖 Detailed setup instructions
+├── 📄 VOICE_TESTING.md             🧪 Testing guide and scenarios
+├── 📄 VOICE_ARCHITECTURE.md        🏗️  System design and diagrams
+├── 📄 VOICE_CHECKLIST.md           ✅ Implementation checklist
+├── 📄 VOICE_SUMMARY.txt            📋 Complete summary
+├── 📄 VOICE_QUICKREF.md            ⚡ Quick reference card
+├── 📄 VOICE_FILES.txt              📁 This file
+│
+├── 🔧 start-voice-dev.bat          🪟 Windows quick start script
+├── 🔧 start-voice-dev.sh           🐧 Linux/Mac quick start script
+│
+├── 📁 client/
+│   │
+│   ├── 📁 types/
+│   │   └── 📄 voice.ts             🔷 TypeScript interfaces
+│   │
+│   ├── 📁 services/
+│   │   ├── 📄 VoiceClient.ts       🎙️  LiveKit client wrapper
+│   │   └── 📄 PresenceClient.ts    🔌 Socket.IO presence client
+│   │
+│   ├── 📁 hooks/
+│   │   └── 📄 useVoice.ts          🪝 Voice state management hook
+│   │
+│   ├── 📁 components/
+│   │   ├── 📄 VoiceChannelItem.tsx 🎵 Voice channel component
+│   │   ├── 📄 ParticipantRow.tsx   👤 Participant row component
+│   │   ├── 📄 SelfFooter.tsx       👣 Fixed footer component
+│   │   └── 📄 ChannelsList.tsx     ✏️  UPDATED - Voice integration
+│   │
+│   └── 📄 global.css               ✏️  UPDATED - Speaking animations
+│
+├── 📁 server/
+│   │
+│   ├── 📁 routes/
+│   │   └── 📄 voice.ts             🎫 LiveKit token endpoint
+│   │
+│   ├── 📁 sockets/
+│   │   └── 📄 handlers.ts          ✏️  UPDATED - Voice presence events
+│   │
+│   └── 📄 index.ts                 ✏️  UPDATED - Voice route added
+│
+├── 📄 .env                         ✏️  UPDATED - LiveKit config
+└── 📄 package.json                 ✏️  UPDATED - Voice dev script
+
+================================================================================
+                            FILE STATISTICS
+================================================================================
+
+NEW FILES CREATED:        18 files
+EXISTING FILES UPDATED:   5 files
+TOTAL FILES MODIFIED:     23 files
+
+LINES OF CODE ADDED:      ~2,500 lines
+DOCUMENTATION PAGES:      7 documents
+COMPONENTS CREATED:       3 React components
+SERVICES CREATED:         2 service classes
+HOOKS CREATED:            1 custom hook
+API ENDPOINTS CREATED:    1 endpoint
+SOCKET EVENTS ADDED:      5 events
+
+================================================================================
+                        FILE DESCRIPTIONS
+================================================================================
+
+📚 DOCUMENTATION FILES (7):
+
+  VOICE_README.md
+    → Main overview and quick start guide
+    → Start here for understanding the system
+    → ~400 lines
+
+  VOICE_SETUP.md
+    → Detailed setup for development and production
+    → LiveKit configuration instructions
+    → Docker and self-hosted options
+    → ~300 lines
+
+  VOICE_TESTING.md
+    → Comprehensive testing scenarios
+    → Troubleshooting guide
+    → Debug commands
+    → ~250 lines
+
+  VOICE_ARCHITECTURE.md
+    → System architecture diagrams
+    → Data flow explanations
+    → Component interactions
+    → ~500 lines
+
+  VOICE_CHECKLIST.md
+    → Implementation tracking
+    → Deployment checklist
+    → Acceptance criteria
+    → ~300 lines
+
+  VOICE_SUMMARY.txt
+    → Complete summary of implementation
+    → Quick reference for all features
+    → ~200 lines
+
+  VOICE_QUICKREF.md
+    → Quick reference card
+    → Common commands and APIs
+    → ~150 lines
+
+🔧 SCRIPT FILES (2):
+
+  start-voice-dev.bat
+    → Windows batch script
+    → Starts LiveKit Docker container
+    → ~30 lines
+
+  start-voice-dev.sh
+    → Linux/Mac bash script
+    → Starts LiveKit Docker container
+    → ~30 lines
+
+🎨 CLIENT FILES (7):
+
+  client/types/voice.ts
+    → TypeScript interfaces
+    → Participant, VoiceState types
+    → ~20 lines
+
+  client/services/VoiceClient.ts
+    → LiveKit client wrapper
+    → Room management, audio tracks
+    → Speaking detection
+    → ~100 lines
+
+  client/services/PresenceClient.ts
+    → Socket.IO presence client
+    → Event handling, heartbeat
+    → ~100 lines
+
+  client/hooks/useVoice.ts
+    → React hook for voice state
+    → Join/leave, mute/deafen logic
+    → ~150 lines
+
+  client/components/VoiceChannelItem.tsx
+    → Voice channel UI component
+    → Join/leave button, participant list
+    → ~50 lines
+
+  client/components/ParticipantRow.tsx
+    → Individual participant component
+    → Avatar, controls, speaking indicator
+    → ~60 lines
+
+  client/components/SelfFooter.tsx
+    → Fixed footer component
+    → Self user controls
+    → ~50 lines
+
+🖥️ SERVER FILES (1):
+
+  server/routes/voice.ts
+    → LiveKit token generation
+    → JWT creation with room scope
+    → ~40 lines
+
+✏️ UPDATED FILES (5):
+
+  client/components/ChannelsList.tsx
+    → Added voice channel integration
+    → Text/voice channel separation
+    → Voice UI components
+    → +80 lines
+
+  client/global.css
+    → Added speaking pulse animation
+    → Voice-specific styles
+    → +20 lines
+
+  server/sockets/handlers.ts
+    → Added voice presence events
+    → Heartbeat and cleanup logic
+    → +100 lines
+
+  server/index.ts
+    → Added voice token endpoint
+    → Import voice route
+    → +5 lines
+
+  .env
+    → Added LiveKit configuration
+    → API keys and URLs
+    → +5 lines
+
+  package.json
+    → Added voice:dev script
+    → +1 line
+
+================================================================================
+                        COMPONENT HIERARCHY
+================================================================================
+
+App
+ └── ChannelsList
+      ├── Text Channels
+      │    └── [Hash] channel-name
+      │
+      ├── Voice Channels
+      │    └── VoiceChannelItem
+      │         ├── [Volume] channel-name [Join/Leave]
+      │         └── Participants
+      │              └── ParticipantRow
+      │                   ├── Avatar (with speaking ring)
+      │                   ├── Username
+      │                   └── [Mic] [Headphones]
+      │
+      └── SelfFooter (Fixed)
+           ├── Avatar
+           ├── Username
+           └── [Mic] [Headphones] [Settings]
+
+================================================================================
+                        SERVICE ARCHITECTURE
+================================================================================
+
+useVoice Hook
+ ├── VoiceClient (LiveKit)
+ │    ├── connect()
+ │    ├── leave()
+ │    ├── setMicMuted()
+ │    ├── setDeafened()
+ │    └── onSpeaking()
+ │
+ └── PresenceClient (Socket.IO)
+      ├── subscribe()
+      ├── joinVoice()
+      ├── leaveVoice()
+      ├── updateState()
+      └── updateSpeaking()
+
+================================================================================
+                        API ENDPOINTS
+================================================================================
+
+POST /api/voice/token
+  Request:  { channelId, userId }
+  Response: { token, url }
+  Purpose:  Generate LiveKit access token
+
+================================================================================
+                        SOCKET.IO EVENTS
+================================================================================
+
+CLIENT → SERVER:
+  voice:join       - Join voice channel
+  voice:leave      - Leave voice channel
+  voice:state      - Update muted/deafened
+  voice:speaking   - Update speaking state
+  voice:heartbeat  - Keep-alive ping
+
+SERVER → CLIENT:
+  voice:userlist   - Full participant list
+  voice:join       - User joined notification
+  voice:leave      - User left notification
+  voice:state      - State update notification
+  voice:speaking   - Speaking update notification
+
+================================================================================
+                        DEPENDENCIES ADDED
+================================================================================
+
+Production:
+  livekit-client        ^2.x.x
+  livekit-server-sdk    ^2.x.x
+
+Development:
+  (No additional dev dependencies)
+
+================================================================================
+                        CONFIGURATION FILES
+================================================================================
+
+.env
+  VITE_LIVEKIT_URL          - Client LiveKit URL
+  LIVEKIT_URL               - Server LiveKit URL
+  LIVEKIT_API_KEY           - API key for tokens
+  LIVEKIT_API_SECRET        - API secret for tokens
+
+package.json
+  scripts.voice:dev         - Quick start script
+
+================================================================================
+                        TOTAL PROJECT IMPACT
+================================================================================
+
+Files Created:        18
+Files Modified:       5
+Total Lines Added:    ~2,500
+Components:           3
+Services:             2
+Hooks:                1
+API Endpoints:        1
+Socket Events:        5
+Documentation Pages:  7
+Scripts:              2
+
+================================================================================

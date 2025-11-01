@@ -1,0 +1,12 @@
+export { MyAccountPage } from './MyAccountPage';
+export { ProfilePage } from './ProfilePage';
+export { PrivacyPage } from './PrivacyPage';
+export { VoicePage } from './VoicePage';
+export { NotificationsPage } from './NotificationsPage';
+export { TextImagesPage } from './TextImagesPage';
+export { AppearancePage } from './AppearancePage';
+export { AccessibilityPage } from './AccessibilityPage';
+export { KeybindsPage } from './KeybindsPage';
+export { AdvancedPage } from './AdvancedPage';
+export { LanguagePage } from './LanguagePage';
+export { ChangelogPage } from './ChangelogPage';
