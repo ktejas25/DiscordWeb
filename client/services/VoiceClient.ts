@@ -15,7 +15,8 @@ export class VoiceClient {
 
     this.room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
       if (track.kind === Track.Kind.Audio) {
-        track.attach();
+        const audioElement = track.attach();
+        audioElement.play().catch(e => console.warn('Audio autoplay failed:', e));
       }
     });
 
@@ -25,7 +26,7 @@ export class VoiceClient {
 
     this.room.on(RoomEvent.AudioPlaybackStatusChanged, () => {
       if (!this.room?.canPlaybackAudio) {
-        this.room?.startAudio();
+        this.room?.startAudio().catch(e => console.warn('Failed to start audio:', e));
       }
     });
 
@@ -34,8 +35,14 @@ export class VoiceClient {
     });
 
     await this.room.connect(livekitUrl, token);
+    await this.room.localParticipant.setMicrophoneEnabled(true);
     
     this.room.remoteParticipants.forEach(p => this.setupSpeakingDetection(p));
+    this.setupLocalSpeakingDetection();
+    
+    if (!this.room.canPlaybackAudio) {
+      await this.room.startAudio().catch(e => console.warn('Failed to start audio:', e));
+    }
     
     return this.room;
   }
@@ -83,6 +90,20 @@ export class VoiceClient {
     this.speakingIntervals.set(participant.identity, interval);
 
     participant.on('isSpeakingChanged', checkSpeaking);
+  }
+
+  private setupLocalSpeakingDetection() {
+    if (!this.room?.localParticipant) return;
+
+    const checkSpeaking = () => {
+      const isSpeaking = this.room!.localParticipant.isSpeaking;
+      this.onSpeakingCallback?.(this.room!.localParticipant.identity, isSpeaking);
+    };
+
+    const interval = setInterval(checkSpeaking, 250);
+    this.speakingIntervals.set(this.room.localParticipant.identity, interval);
+
+    this.room.localParticipant.on('isSpeakingChanged', checkSpeaking);
   }
 
   getRoom() {

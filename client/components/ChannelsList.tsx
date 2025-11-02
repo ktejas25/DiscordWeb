@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useChannels } from '@/hooks/useChannels';
 import { useServerPresence } from '@/hooks/useServerPresence';
-import { Plus, Hash, Trash2, Volume2 } from 'lucide-react';
+import { Plus, Hash, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { VoiceChannelItem } from './VoiceChannelItem';
+import { VoiceChannels } from './VoiceChannels';
 import { SelfFooter } from './SelfFooter';
+import { useVoice } from '@/hooks/useVoice';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -20,9 +21,12 @@ interface ChannelsListProps {
 export function ChannelsList({ serverId, selectedChannelId, onChannelSelect }: ChannelsListProps) {
   const { user } = useAuth();
   const { channels, isLoading, createChannel, deleteChannel } = useChannels(serverId);
-  const { textByChannel, voiceByChannel, setActiveText, joinVoice: joinVoicePresence } = useServerPresence(serverId);
-  const [selfMuted, setSelfMuted] = useState(false);
-  const [selfDeafened, setSelfDeafened] = useState(false);
+  const { textByChannel, setActiveText } = useServerPresence(serverId);
+  const { voiceState, currentChannelId, selfMuted, selfDeafened, toggleMute, toggleDeafen } = useVoice();
+  
+  const selfSpeaking = currentChannelId ? 
+    voiceState[currentChannelId]?.participants.find(p => p.userId === user?.id)?.speaking || false 
+    : false;
 
   useEffect(() => {
     if (selectedChannelId) {
@@ -39,7 +43,6 @@ export function ChannelsList({ serverId, selectedChannelId, onChannelSelect }: C
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const textChannels = channels.filter(c => c.type === 'text');
-  const voiceChannels = channels.filter(c => c.type === 'voice');
 
   const handleCreateChannel = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -193,40 +196,7 @@ export function ChannelsList({ serverId, selectedChannelId, onChannelSelect }: C
             )}
 
             {/* Voice Channels */}
-            {voiceChannels.length > 0 && (
-              <div className="space-y-1">
-                <div className="text-xs font-semibold text-discord-muted uppercase px-2 mb-1">Voice Channels</div>
-                {voiceChannels.map((channel) => {
-                  const users = voiceByChannel.get(channel.id) || [];
-                  return (
-                    <div key={channel.id} className="space-y-1">
-                      <div className="flex items-center gap-2 px-3 py-2 rounded cursor-pointer transition-colors text-discord-muted hover:bg-discord-dark/50 hover:text-white group">
-                        <Volume2 className="w-4 h-4 flex-shrink-0" />
-                        <span className="flex-1 truncate text-sm font-medium">{channel.name}</span>
-                        <button
-                          onClick={() => joinVoicePresence(channel.id)}
-                          className="opacity-0 group-hover:opacity-100 text-xs px-2 py-1 rounded bg-primary hover:bg-primary/90 transition"
-                        >
-                          Join
-                        </button>
-                      </div>
-                      {users.length > 0 && (
-                        <div className="ml-6 space-y-1">
-                          {users.map(u => (
-                            <div key={u.userId} className="flex items-center gap-2 px-2 py-1 text-sm text-discord-muted">
-                              <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-xs overflow-hidden">
-                                {u.avatar_url && u.avatar_url.trim() !== '' ? <img src={u.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : u.username[0].toUpperCase()}
-                              </div>
-                              <span>{u.username}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            {serverId && <VoiceChannels serverId={serverId} channels={channels} />}
           </>
         )}
       </div>
@@ -234,8 +204,9 @@ export function ChannelsList({ serverId, selectedChannelId, onChannelSelect }: C
       <SelfFooter
         muted={selfMuted}
         deafened={selfDeafened}
-        onToggleMute={() => setSelfMuted(!selfMuted)}
-        onToggleDeafen={() => setSelfDeafened(!selfDeafened)}
+        speaking={selfSpeaking}
+        onToggleMute={toggleMute}
+        onToggleDeafen={toggleDeafen}
       />
     </div>
   );

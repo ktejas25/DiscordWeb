@@ -28,16 +28,15 @@ export function VoiceChannelItem({
 }: VoiceChannelItemProps) {
   return (
     <div className="space-y-1">
-      <div className="flex items-center gap-2 px-3 py-2 rounded cursor-pointer transition-colors text-discord-muted hover:bg-discord-dark/50 hover:text-white group">
+      <div 
+        onClick={isJoined ? onLeave : onJoin}
+        className="flex items-center gap-2 px-3 py-2 rounded cursor-pointer transition-colors text-discord-muted hover:bg-discord-dark/50 hover:text-white group"
+      >
         <Volume2 className="w-4 h-4 flex-shrink-0" />
         <span className="flex-1 truncate text-sm font-medium">{channelName}</span>
-        <button
-          onClick={isJoined ? onLeave : onJoin}
-          className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-discord-dark transition"
-          aria-label={isJoined ? 'Leave' : 'Join'}
-        >
+        <div className="p-1">
           {isJoined ? <LogOut className="w-3.5 h-3.5" /> : <LogIn className="w-3.5 h-3.5" />}
-        </button>
+        </div>
       </div>
 
       {participants.length > 0 && (

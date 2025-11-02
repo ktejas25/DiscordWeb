@@ -26,7 +26,10 @@ export function useVoice() {
         ...prev,
         [channelId]: {
           isJoinedBySelf: prev[channelId]?.isJoinedBySelf || false,
-          participants
+          participants: participants.map((p: any) => ({
+            ...p,
+            isSelf: p.userId === user?.id
+          }))
         }
       }));
     };
@@ -37,7 +40,10 @@ export function useVoice() {
         ...prev,
         [channelId]: {
           isJoinedBySelf: prev[channelId]?.isJoinedBySelf || false,
-          participants: [...(prev[channelId]?.participants || []), joinedUser]
+          participants: [...(prev[channelId]?.participants || []), {
+            ...joinedUser,
+            isSelf: joinedUser.userId === user?.id
+          }]
         }
       }));
     };
@@ -102,6 +108,19 @@ export function useVoice() {
   const joinVoice = useCallback(async (channelId: string) => {
     if (!user) return;
 
+    if (currentChannelId) {
+      if (currentChannelId === channelId) return;
+      await voiceClient.leave();
+      presenceClient.leaveVoice(currentChannelId, user.id);
+      setVoiceState(prev => ({
+        ...prev,
+        [currentChannelId]: {
+          isJoinedBySelf: false,
+          participants: (prev[currentChannelId]?.participants || []).filter(p => p.userId !== user.id)
+        }
+      }));
+    }
+
     try {
       const response = await fetch('http://localhost:8081/api/voice/token', {
         method: 'POST',
@@ -126,7 +145,10 @@ export function useVoice() {
         ...prev,
         [channelId]: {
           isJoinedBySelf: true,
-          participants: prev[channelId]?.participants || []
+          participants: (prev[channelId]?.participants || []).map(p => ({
+            ...p,
+            isSelf: p.userId === user.id
+          }))
         }
       }));
 
@@ -139,7 +161,7 @@ export function useVoice() {
       console.error('Failed to join voice:', error);
       toast.error('Failed to join voice channel');
     }
-  }, [user, selfMuted]);
+  }, [user, selfMuted, currentChannelId]);
 
   const leaveVoice = useCallback(async () => {
     if (!currentChannelId || !user) return;
@@ -151,7 +173,7 @@ export function useVoice() {
       ...prev,
       [currentChannelId]: {
         isJoinedBySelf: false,
-        participants: prev[currentChannelId]?.participants || []
+        participants: (prev[currentChannelId]?.participants || []).filter(p => p.userId !== user.id)
       }
     }));
 
