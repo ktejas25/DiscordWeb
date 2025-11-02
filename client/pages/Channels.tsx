@@ -178,7 +178,7 @@ export default function Channels() {
               <>
                 {selectedChannelId && selectedChannel ? (
                   <>
-                    <ChannelChat channelId={selectedChannelId} channelName={selectedChannel.name} />
+                    <ChannelChat channelId={selectedChannelId} channelName={selectedChannel.name} serverId={selectedServerId || undefined} />
                     {showServerMembers && selectedServerId ? (
                       <ServerMembersList serverId={selectedServerId} isOwner={isServerOwner} />
                     ) : (

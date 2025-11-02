@@ -2,20 +2,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { messageService } from '@/services/messageService';
 import { socketService } from '@/services/socketService';
+import { roleService } from '@/services/roleService';
+import { getUserRoleColor } from '@/utils/roleUtils';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { MemberRole } from '@/types/role';
 
 interface ChannelChatProps {
   channelId: string;
   channelName: string;
+  serverId?: string;
 }
 
-export function ChannelChat({ channelId, channelName }: ChannelChatProps) {
+export function ChannelChat({ channelId, channelName, serverId }: ChannelChatProps) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState<string[]>([]);
+  const [userRoles, setUserRoles] = useState<Record<string, MemberRole[]>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -63,6 +68,15 @@ export function ChannelChat({ channelId, channelName }: ChannelChatProps) {
   const loadMessages = async () => {
     const data = await messageService.getChannelMessages(channelId);
     setMessages(data);
+    if (serverId) {
+      const userIds = [...new Set(data.map((m: any) => m.author_id))];
+      const rolesMap: Record<string, MemberRole[]> = {};
+      for (const userId of userIds) {
+        const roles = await roleService.getMemberRoles(serverId, userId);
+        rolesMap[userId] = roles;
+      }
+      setUserRoles(rolesMap);
+    }
   };
 
   const handleSend = async () => {
@@ -117,7 +131,9 @@ export function ChannelChat({ channelId, channelName }: ChannelChatProps) {
               </div>
               <div className={isOwnMessage ? 'text-right' : ''}>
                 <div className={`flex items-baseline gap-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
-                  <span className="font-semibold text-white">{msg.author?.username}</span>
+                  <span className="font-semibold" style={{ color: getUserRoleColor(userRoles[msg.author_id] || []) }}>
+                    {msg.author?.username}
+                  </span>
                   <span className="text-xs text-discord-muted">
                     {new Date(msg.created_at).toLocaleTimeString()}
                   </span>

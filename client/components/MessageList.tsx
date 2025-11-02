@@ -1,23 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/contexts/AuthContext';
+import { roleService } from '@/services/roleService';
+import { getUserRoleColor } from '@/utils/roleUtils';
 import { MessageCircle, Trash2, Edit2, Smile } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { MemberRole } from '@/types/role';
 
 interface MessageListProps {
   channelId: string | null;
   channelType?: 'text' | 'voice';
+  serverId?: string;
 }
 
-export function MessageList({ channelId, channelType = 'text' }: MessageListProps) {
+export function MessageList({ channelId, channelType = 'text', serverId }: MessageListProps) {
   const { messages, isLoading, sendMessage, deleteMessage, updateMessage } = useMessages(channelId);
   const { user } = useAuth();
   const [messageContent, setMessageContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
+  const [userRoles, setUserRoles] = useState<Record<string, MemberRole[]>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -27,6 +32,21 @@ export function MessageList({ channelId, channelType = 'text' }: MessageListProp
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (serverId && messages.length > 0) {
+      const fetchRoles = async () => {
+        const userIds = [...new Set(messages.map(m => m.author_id))];
+        const rolesMap: Record<string, MemberRole[]> = {};
+        for (const userId of userIds) {
+          const roles = await roleService.getMemberRoles(serverId, userId);
+          rolesMap[userId] = roles;
+        }
+        setUserRoles(rolesMap);
+      };
+      fetchRoles();
+    }
+  }, [serverId, messages]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +133,7 @@ export function MessageList({ channelId, channelType = 'text' }: MessageListProp
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold text-white">
+                  <span className="font-semibold" style={{ color: getUserRoleColor(userRoles[message.author_id] || []) }}>
                     {message.author?.username || 'Unknown User'}
                   </span>
                   <span className="text-xs text-discord-muted">
