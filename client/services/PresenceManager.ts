@@ -5,7 +5,7 @@ export type PresenceMeta = {
   serverId: string;
   userId: string;
   username: string;
-  avatarUrl?: string | null;
+  avatar_url?: string | null;
   activeTextChannelId: string | null;
   activeVoiceChannelId: string | null;
 };
@@ -15,7 +15,7 @@ export class PresenceManager {
   private currentMeta: PresenceMeta | null = null;
   private listeners: Set<() => void> = new Set();
 
-  async subscribe(serverId: string, nonce: string, userId: string, username: string, avatarUrl?: string | null) {
+  async subscribe(serverId: string, nonce: string, userId: string, username: string, avatar_url?: string | null) {
     if (this.channel) {
       await this.unsubscribe();
     }
@@ -24,7 +24,7 @@ export class PresenceManager {
       serverId,
       userId,
       username,
-      avatarUrl,
+      avatar_url,
       activeTextChannelId: null,
       activeVoiceChannelId: null,
     };

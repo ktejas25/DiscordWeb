@@ -25,6 +25,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (session?.user) {
+          // Fetch profile data
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
           // Update user status to online
           await supabase
             .from('profiles')
@@ -34,9 +41,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser({
             id: session.user.id,
             email: session.user.email!,
-            username: session.user.user_metadata?.username || session.user.email!.split('@')[0],
-            display_name: session.user.user_metadata?.display_name || session.user.email!.split('@')[0],
-            avatar_url: session.user.user_metadata?.avatar_url,
+            username: profile?.username || session.user.user_metadata?.username || session.user.email!.split('@')[0],
+            display_name: profile?.display_name || session.user.user_metadata?.display_name || session.user.email!.split('@')[0],
+            avatar_url: profile?.avatar_url || null,
             status: 'online',
             created_at: session.user.created_at
           });
@@ -60,6 +67,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       if (!data.user) throw new Error('Login failed');
       
+      // Fetch profile data
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+      
       // Update user status to online
       await supabase
         .from('profiles')
@@ -69,9 +83,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser({
         id: data.user.id,
         email: data.user.email!,
-        username: data.user.user_metadata?.username || email.split('@')[0],
-        display_name: data.user.user_metadata?.display_name || email.split('@')[0],
-        avatar_url: data.user.user_metadata?.avatar_url,
+        username: profile?.username || data.user.user_metadata?.username || email.split('@')[0],
+        display_name: profile?.display_name || data.user.user_metadata?.display_name || email.split('@')[0],
+        avatar_url: profile?.avatar_url || null,
         status: 'online',
         created_at: data.user.created_at
       });

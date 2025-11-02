@@ -18,9 +18,9 @@ export function SelfFooter({ muted, deafened, onToggleMute, onToggleDeafen }: Se
 
   return (
     <div className="sticky bottom-0 bg-discord-darker border-t border-discord-dark p-2 flex items-center gap-2">
-      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
-        {user.avatar_url ? (
-          <img src={user.avatar_url} alt={user.username} className="w-full h-full rounded-full" />
+      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0 overflow-hidden">
+        {user.avatar_url && user.avatar_url.trim() !== '' ? (
+          <img src={user.avatar_url} alt={user.username} className="w-full h-full rounded-full object-cover" />
         ) : (
           user.username.charAt(0).toUpperCase()
         )}

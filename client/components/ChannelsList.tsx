@@ -178,8 +178,8 @@ export function ChannelsList({ serverId, selectedChannelId, onChannelSelect }: C
                         <div className="ml-6 space-y-1">
                           {users.map(u => (
                             <div key={u.userId} className="flex items-center gap-2 px-2 py-1 text-sm text-discord-muted">
-                              <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-xs">
-                                {u.avatarUrl ? <img src={u.avatarUrl} alt="" className="w-full h-full rounded-full" /> : u.username[0].toUpperCase()}
+                              <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-xs overflow-hidden">
+                                {u.avatar_url && u.avatar_url.trim() !== '' ? <img src={u.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : u.username[0].toUpperCase()}
                               </div>
                               <span>{u.username}</span>
                             </div>
@@ -214,8 +214,8 @@ export function ChannelsList({ serverId, selectedChannelId, onChannelSelect }: C
                         <div className="ml-6 space-y-1">
                           {users.map(u => (
                             <div key={u.userId} className="flex items-center gap-2 px-2 py-1 text-sm text-discord-muted">
-                              <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-xs">
-                                {u.avatarUrl ? <img src={u.avatarUrl} alt="" className="w-full h-full rounded-full" /> : u.username[0].toUpperCase()}
+                              <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-xs overflow-hidden">
+                                {u.avatar_url && u.avatar_url.trim() !== '' ? <img src={u.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : u.username[0].toUpperCase()}
                               </div>
                               <span>{u.username}</span>
                             </div>
