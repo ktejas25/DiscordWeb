@@ -26,7 +26,8 @@ export async function deleteAvatar(url: string): Promise<void> {
 export async function uploadMessageAttachment(userId: string, file: File): Promise<string> {
   const ext = file.name.split('.').pop();
   const timestamp = Date.now();
-  const path = `${userId}/${timestamp}.${ext}`;
+  const random = Math.random().toString(36).substring(2, 9);
+  const path = `${userId}/${timestamp}-${random}.${ext}`;
 
   const { error: uploadError } = await supabase.storage
     .from('message-attachments')
