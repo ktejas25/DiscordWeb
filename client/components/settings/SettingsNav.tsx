@@ -22,9 +22,10 @@ export function SettingsNav() {
   const { currentSection, setSection, closeSettings } = useSettingsModal();
   const { logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     closeSettings();
+    window.location.href = '/';
   };
 
   const categories = Array.from(new Set(sections.map(s => s.category)));
