@@ -16,10 +16,12 @@ import { useChannels } from '@/hooks/useChannels';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/services/supabaseClient';
 import { MessageCircle, Users, UserPlus, Shield } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 export default function Channels() {
   const { user } = useAuth();
   const { conversations } = useDMs();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedServerId, setSelectedServerId] = useState<string | null>(null);
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
   const [selectedChannelType, setSelectedChannelType] = useState<'text' | 'voice'>('text');
@@ -30,6 +32,15 @@ export default function Channels() {
   const [showServerMembers, setShowServerMembers] = useState(false);
   const [isServerOwner, setIsServerOwner] = useState(false);
   const { channels } = useChannels(selectedServerId);
+
+  useEffect(() => {
+    const dmId = searchParams.get('dm');
+    if (dmId) {
+      setActiveTab('dms');
+      setSelectedConversationId(dmId);
+      setSearchParams({});
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (selectedServerId && user) {
@@ -52,6 +63,7 @@ export default function Channels() {
     if (tab === 'servers') {
       setSelectedConversationId(null);
     }
+    setSearchParams({});
   };
 
   const selectedConversation = conversations.find(c => c.id === selectedConversationId);

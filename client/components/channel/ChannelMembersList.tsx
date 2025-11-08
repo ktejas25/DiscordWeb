@@ -3,6 +3,8 @@ import { channelService } from '@/services/channelService';
 import { Users, Crown, UserMinus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { dmService } from '@/services/dmService';
+import { useNavigate } from 'react-router-dom';
 
 interface ChannelMembersListProps {
   channelId: string;
@@ -72,6 +74,16 @@ export function ChannelMembersList({ channelId, isOwner, serverId }: ChannelMemb
     }
   };
 
+  const handleUserClick = async (userId: string) => {
+    if (!user?.id || userId === user.id) return;
+    try {
+      const conversation = await dmService.getOrCreateDMConversation(user.id, userId);
+      window.location.href = `/app/channels?dm=${conversation.id}`;
+    } catch (error) {
+      toast.error('Failed to open DM');
+    }
+  };
+
   return (
     <div className="w-60 bg-discord-darker border-l border-discord-darker p-4">
       <div className="flex items-center gap-2 mb-4 text-discord-muted">
@@ -80,7 +92,10 @@ export function ChannelMembersList({ channelId, isOwner, serverId }: ChannelMemb
       </div>
       <div className="space-y-1">
         {serverAdmin && (
-          <div className="flex items-center justify-between group hover:bg-discord-dark rounded px-2 py-1.5 transition mb-2 border-b border-discord-dark pb-2">
+          <div 
+            onClick={() => handleUserClick(serverAdmin.id)}
+            className="flex items-center justify-between group hover:bg-discord-dark rounded px-2 py-1.5 transition mb-2 border-b border-discord-dark pb-2 cursor-pointer"
+          >
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="relative flex-shrink-0">
                 <div className="w-9 h-9 rounded-full bg-yellow-500/20 flex items-center justify-center">
@@ -119,7 +134,11 @@ export function ChannelMembersList({ channelId, isOwner, serverId }: ChannelMemb
           const avatarUrl = member.user?.avatar_url;
           
           return (
-            <div key={member.id} className="flex items-center justify-between group hover:bg-discord-dark rounded px-2 py-1.5 transition">
+            <div 
+              key={member.id} 
+              onClick={() => handleUserClick(member.user_id)}
+              className="flex items-center justify-between group hover:bg-discord-dark rounded px-2 py-1.5 transition cursor-pointer"
+            >
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div className="relative flex-shrink-0">
                   <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
@@ -163,7 +182,10 @@ export function ChannelMembersList({ channelId, isOwner, serverId }: ChannelMemb
               </div>
               {isOwner && member.user_id !== user?.id && member.role !== 'owner' && (
                 <button
-                  onClick={() => handleRemove(member.user_id, member.user?.username)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemove(member.user_id, member.user?.username);
+                  }}
                   className="opacity-0 group-hover:opacity-100 text-discord-muted hover:text-red-500 transition flex-shrink-0"
                   title="Remove member"
                 >
