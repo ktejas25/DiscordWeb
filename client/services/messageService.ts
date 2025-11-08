@@ -45,12 +45,12 @@ export const messageService = {
     }
   },
 
-  async sendMessage(channelId: string, authorId: string, content: string, reply_to?: string) {
+  async sendMessage(channelId: string, authorId: string, content: string, reply_to?: string, attachments?: string[]) {
     try {
       const { data, error } = await supabase
         .from('messages')
         .insert([
-          { channel_id: channelId, author_id: authorId, content, reply_to }
+          { channel_id: channelId, author_id: authorId, content, reply_to, attachments }
         ])
         .select()
         .single();

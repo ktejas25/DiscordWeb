@@ -4,10 +4,12 @@ import { messageService } from '@/services/messageService';
 import { socketService } from '@/services/socketService';
 import { roleService } from '@/services/roleService';
 import { getUserRoleColor } from '@/utils/roleUtils';
-import { Send } from 'lucide-react';
+import { uploadMessageAttachment } from '@/services/storageService';
+import { Send, Plus, X, Download } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MemberRole } from '@/types/role';
+import { toast } from 'sonner';
 
 interface ChannelChatProps {
   channelId: string;
@@ -21,8 +23,11 @@ export function ChannelChat({ channelId, channelName, serverId }: ChannelChatPro
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState<string[]>([]);
   const [userRoles, setUserRoles] = useState<Record<string, MemberRole[]>>({});
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadMessages();
@@ -80,26 +85,37 @@ export function ChannelChat({ channelId, channelName, serverId }: ChannelChatPro
   };
 
   const handleSend = async () => {
-    if (!input.trim() || !user) return;
-    const tempId = `temp-${Date.now()}`;
-    const optimisticMessage = {
-      id: tempId,
-      content: input,
-      author_id: user.id,
-      channel_id: channelId,
-      created_at: new Date().toISOString(),
-      author: { id: user.id, username: user.username, avatar_url: user.avatar_url }
-    };
-    setMessages(prev => [...prev, optimisticMessage]);
-    setInput('');
-    socketService.stopChannelTyping(channelId, user.id);
+    if ((!input.trim() && selectedImages.length === 0) || !user) return;
+    setUploading(true);
     try {
-      const message = await messageService.sendMessage(channelId, user.id, input);
+      let attachments: string[] = [];
+      if (selectedImages.length > 0) {
+        attachments = await Promise.all(
+          selectedImages.map(file => uploadMessageAttachment(user.id, file))
+        );
+      }
+      const tempId = `temp-${Date.now()}`;
+      const optimisticMessage = {
+        id: tempId,
+        content: input,
+        author_id: user.id,
+        channel_id: channelId,
+        created_at: new Date().toISOString(),
+        author: { id: user.id, username: user.username, avatar_url: user.avatar_url },
+        attachments
+      };
+      setMessages(prev => [...prev, optimisticMessage]);
+      setInput('');
+      setSelectedImages([]);
+      socketService.stopChannelTyping(channelId, user.id);
+      const message = await messageService.sendMessage(channelId, user.id, input || '', undefined, attachments);
       setMessages(prev => prev.map(m => m.id === tempId ? message : m));
       socketService.sendChannelMessage(channelId, message);
     } catch (error) {
       console.error('Failed to send message:', error);
-      setMessages(prev => prev.filter(m => m.id !== tempId));
+      toast.error('Failed to send message');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -110,6 +126,23 @@ export function ChannelChat({ channelId, channelName, serverId }: ChannelChatPro
     typingTimeoutRef.current = setTimeout(() => {
       socketService.stopChannelTyping(channelId, user.id);
     }, 3000);
+  };
+
+  const handleDownload = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `image-${Date.now()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      toast.error('Failed to download image');
+    }
   };
 
   return (
@@ -139,6 +172,29 @@ export function ChannelChat({ channelId, channelName, serverId }: ChannelChatPro
                   </span>
                 </div>
                 <p className={`text-white ${isOwnMessage ? 'bg-primary/20 rounded-lg px-3 py-2 inline-block' : ''}`}>{msg.content}</p>
+                {msg.attachments && msg.attachments.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {msg.attachments.map((url: string, idx: number) => (
+                      <div key={idx} className="relative group/img">
+                        <img
+                          src={url}
+                          alt="attachment"
+                          className="max-w-xs max-h-64 rounded cursor-pointer hover:opacity-90"
+                          onClick={() => window.open(url, '_blank')}
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(url);
+                          }}
+                          className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-black rounded opacity-0 group-hover/img:opacity-100 transition-opacity"
+                        >
+                          <Download className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -151,19 +207,64 @@ export function ChannelChat({ channelId, channelName, serverId }: ChannelChatPro
         <div ref={messagesEndRef} />
       </div>
       <div className="p-4 border-t border-discord-darker">
+        {selectedImages.length > 0 && (
+          <div className="flex gap-2 mb-2 flex-wrap">
+            {selectedImages.map((file, idx) => (
+              <div key={idx} className="relative">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="preview"
+                  className="w-20 h-20 object-cover rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => setSelectedImages(prev => prev.filter((_, i) => i !== idx))}
+                  className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 hover:bg-red-600"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
         <div className="flex gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              const imageFiles = files.filter(f => f.type.startsWith('image/'));
+              if (imageFiles.length !== files.length) {
+                toast.error('Only image files are allowed');
+              }
+              setSelectedImages(prev => [...prev, ...imageFiles]);
+            }}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="p-2 bg-discord-dark hover:bg-discord-darker rounded text-white disabled:opacity-50"
+            title="Attach image"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
           <Input
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
               handleTyping();
             }}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            onKeyPress={(e) => e.key === 'Enter' && !uploading && handleSend()}
             placeholder={`Message #${channelName}`}
             className="bg-discord-dark border-discord-dark text-white"
+            disabled={uploading}
           />
-          <Button onClick={handleSend} className="bg-primary hover:bg-primary/90">
-            <Send className="w-4 h-4" />
+          <Button onClick={handleSend} disabled={uploading || (!input.trim() && selectedImages.length === 0)} className="bg-primary hover:bg-primary/90">
+            {uploading ? 'Uploading...' : <Send className="w-4 h-4" />}
           </Button>
         </div>
       </div>

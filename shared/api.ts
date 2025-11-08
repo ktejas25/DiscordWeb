@@ -67,6 +67,7 @@ export interface Message {
   reply_to?: string;
   edited_at?: string;
   created_at: string;
+  attachments?: string[];
 }
 
 export interface ChannelInvitation {

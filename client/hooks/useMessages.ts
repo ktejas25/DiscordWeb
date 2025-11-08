@@ -51,10 +51,10 @@ export function useMessages(channelId: string | null) {
     };
   }, [channelId]);
 
-  const sendMessage = useCallback(async (authorId: string, content: string, reply_to?: string) => {
+  const sendMessage = useCallback(async (authorId: string, content: string, reply_to?: string, attachments?: string[]) => {
     if (!channelId) throw new Error('No channel selected');
     try {
-      const newMessage = await messageService.sendMessage(channelId, authorId, content, reply_to);
+      const newMessage = await messageService.sendMessage(channelId, authorId, content, reply_to, attachments);
       const { supabase } = await import('@/services/supabaseClient');
       const { data: profile } = await supabase
         .from('profiles')
