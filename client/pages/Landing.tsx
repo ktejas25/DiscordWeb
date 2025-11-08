@@ -119,7 +119,6 @@ export default function Landing() {
     { value: '150+', label: 'Countries', icon: Award }
   ];
 
-  const trustedBy = ['Acme Corp', 'TechFlow', 'Innovate Inc', 'Digital Labs', 'CloudSync'];
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white overflow-x-hidden">
@@ -134,18 +133,16 @@ export default function Landing() {
             <Link to="/" className="flex items-center gap-2.5 group">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/40 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5 text-white" strokeWidth={2.5} />
+                <div className="relative w-9 h-9 rounded-lg flex items-center justify-center">
+                  <img src="/Harmonny.png" alt="Harmony" className="w-9 h-9" />
                 </div>
               </div>
               <span className="font-semibold text-[15px] tracking-tight">Harmony</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-5">
               <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors">Features</a>
               <a href="#testimonials" className="text-sm text-white/60 hover:text-white transition-colors">Customers</a>
-              <a href="#pricing" className="text-sm text-white/60 hover:text-white transition-colors">Pricing</a>
-              <a href="#" className="text-sm text-white/60 hover:text-white transition-colors">Docs</a>
             </div>
 
             <div className="hidden md:flex items-center gap-3">
@@ -265,20 +262,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Trusted By */}
-      <section className="py-12 px-6 border-y border-white/[0.08] bg-white/[0.02]">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs uppercase tracking-wider text-white/40 mb-8">Trusted by teams at</p>
-          <div className="flex flex-wrap items-center justify-center gap-12">
-            {trustedBy.map((company, i) => (
-              <div key={i} className="text-white/30 font-medium text-sm">{company}</div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Features Section */}
-      <section id="features" className="py-24 px-6">
+      <section id="features" className="py-10 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 max-w-3xl mx-auto">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
@@ -414,8 +399,8 @@ export default function Landing() {
             <Link to="/" className="inline-flex items-center gap-2.5 mb-8 group">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative w-11 h-11 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                  <MessageSquare className="w-6 h-6 text-white" strokeWidth={2.5} />
+                <div className="relative w-11 h-11 rounded-xl flex items-center justify-center">
+                  <img src="/Harmonny.png" alt="Harmony" className="w-11 h-11" />
                 </div>
               </div>
               <span className="font-bold text-2xl tracking-tight">Harmony</span>

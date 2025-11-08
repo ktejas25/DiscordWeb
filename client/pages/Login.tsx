@@ -53,8 +53,8 @@ export default function Login() {
         <div className="relative p-8">
           {/* Logo/Brand */}
           <div className="flex justify-center mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-xl">H</span>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+              <img src="/Harmonny.png" alt="Harmony" className="w-12 h-12" />
             </div>
           </div>
 
