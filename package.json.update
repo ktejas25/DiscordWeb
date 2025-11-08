@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "antd": "^5.22.6",
+    "@supabase/supabase-js": "^2.76.1",
+    "axios": "^1.12.2",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "livekit-client": "^2.15.13",
+    "livekit-server-sdk": "^2.14.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "zod": "^3.25.76"
+  }
+}
