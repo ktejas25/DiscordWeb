@@ -51,9 +51,17 @@ export function DMMessageList({ conversationId }: DMMessageListProps) {
             const isOwnMessage = message.author_id === user?.id;
             return (
               <div key={message.id} className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
-                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-semibold flex-shrink-0">
-                  {message.author?.username?.[0]?.toUpperCase() || 'U'}
-                </div>
+                {message.author?.avatar_url ? (
+                  <img 
+                    src={message.author.avatar_url} 
+                    alt={message.author.username} 
+                    className="w-10 h-10 rounded-full flex-shrink-0 object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-semibold flex-shrink-0">
+                    {message.author?.username?.[0]?.toUpperCase() || 'U'}
+                  </div>
+                )}
                 <div className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}>
                   <div className={`flex items-baseline gap-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
                     <span className="font-semibold text-white text-sm">{message.author?.username || 'Unknown'}</span>
