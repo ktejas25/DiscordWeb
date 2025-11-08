@@ -16,14 +16,18 @@ import {
   Github,
   Twitter,
   Linkedin,
-  ChevronDown
+  Menu,
+  X,
+  Sparkles,
+  TrendingUp,
+  Award,
 } from 'lucide-react';
 
 export default function Landing() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-  const [activeFeature, setActiveFeature] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,39 +46,45 @@ export default function Landing() {
   const features = [
     {
       icon: Zap,
-      title: 'Lightning Fast',
-      description: 'Real-time messaging powered by Socket.io for instant communication.',
-      gradient: 'from-yellow-500 to-orange-500'
+      title: 'Instant Messaging',
+      description: 'Real-time communication with zero latency. Messages delivered instantly across all devices.',
+      gradient: 'from-yellow-500/20 to-orange-500/20',
+      iconGradient: 'from-yellow-500 to-orange-500'
     },
     {
       icon: Server,
-      title: 'Organized Spaces',
-      description: 'Create servers and channels with advanced permission management.',
-      gradient: 'from-blue-500 to-cyan-500'
+      title: 'Organized Workspaces',
+      description: 'Structure your community with servers, channels, and granular permission controls.',
+      gradient: 'from-blue-500/20 to-cyan-500/20',
+      iconGradient: 'from-blue-500 to-cyan-500'
     },
     {
       icon: Users,
-      title: 'Community First',
-      description: 'Build meaningful connections with friends and communities.',
-      gradient: 'from-purple-500 to-pink-500'
+      title: 'Seamless Collaboration',
+      description: 'Connect teams and communities with powerful group features and presence indicators.',
+      gradient: 'from-purple-500/20 to-pink-500/20',
+      iconGradient: 'from-purple-500 to-pink-500'
     },
     {
       icon: MessageSquare,
-      title: 'Rich Messaging',
-      description: 'Direct messages, group chats, and typing indicators.',
-      gradient: 'from-green-500 to-emerald-500'
+      title: 'Rich Communication',
+      description: 'Direct messages, threads, reactions, and typing indicators for natural conversations.',
+      gradient: 'from-green-500/20 to-emerald-500/20',
+      iconGradient: 'from-green-500 to-emerald-500'
     },
     {
       icon: Lock,
       title: 'Enterprise Security',
-      description: 'End-to-end encryption with JWT authentication.',
-      gradient: 'from-red-500 to-rose-500'
+      description: 'Bank-grade encryption, JWT authentication, and compliance-ready infrastructure.',
+      gradient: 'from-red-500/20 to-rose-500/20',
+      iconGradient: 'from-red-500 to-rose-500'
     },
     {
       icon: Shield,
-      title: 'Media Sharing',
-      description: 'Share files and media securely with Supabase Storage.',
-      gradient: 'from-indigo-500 to-purple-500'
+      title: 'Secure File Sharing',
+      description: 'Share documents, images, and media with encrypted cloud storage and access controls.',
+      gradient: 'from-indigo-500/20 to-purple-500/20',
+      iconGradient: 'from-indigo-500 to-purple-500'
     }
   ];
 
@@ -82,162 +92,216 @@ export default function Landing() {
     {
       name: 'Sarah Chen',
       role: 'Community Manager',
-      content: 'Harmony transformed how our team collaborates. The real-time features are incredible!',
-      rating: 5
+      company: 'TechCorp',
+      content: 'Harmony transformed how our 5,000+ member community collaborates. Engagement increased 40% in the first month.',
+      avatar: 'SC'
     },
     {
       name: 'Alex Rivera',
-      role: 'Developer',
-      content: 'The best Discord alternative I\'ve used. Clean, fast, and secure.',
-      rating: 5
+      role: 'Engineering Lead',
+      company: 'DevStudio',
+      content: 'The best communication platform we\'ve used. Clean interface, powerful features, and rock-solid reliability.',
+      avatar: 'AR'
     },
     {
       name: 'Jordan Park',
       role: 'Content Creator',
-      content: 'My community loves Harmony. The server organization is perfect for my needs.',
-      rating: 5
+      company: 'Creator Labs',
+      content: 'My audience loves the organized channels and seamless experience. Harmony just works beautifully.',
+      avatar: 'JP'
     }
   ];
 
-  const scrollToFeatures = () => {
-    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const stats = [
+    { value: '50K+', label: 'Active Users', icon: Users },
+    { value: '10M+', label: 'Messages Daily', icon: MessageSquare },
+    { value: '99.9%', label: 'Uptime SLA', icon: TrendingUp },
+    { value: '150+', label: 'Countries', icon: Award }
+  ];
+
+  const trustedBy = ['Acme Corp', 'TechFlow', 'Innovate Inc', 'Digital Labs', 'CloudSync'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-discord-dark via-discord-darker to-black text-white overflow-x-hidden">
-      {/* Enhanced Navigation */}
+    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-x-hidden">
+      {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-discord-dark/95 backdrop-blur-xl shadow-2xl border-b border-white/5' 
+          ? 'bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/[0.08]' 
           : 'bg-transparent'
       }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-3 group cursor-pointer">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link to="/" className="flex items-center gap-2.5 group">
               <div className="relative">
-                <div className="absolute inset-0 bg-primary blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
-                <div className="relative w-10 h-10 bg-gradient-to-br from-primary to-primary/70 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform">
-                  <MessageSquare className="w-6 h-6 text-white" />
+                <div className="absolute inset-0 bg-primary/40 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
+                  <MessageSquare className="w-5 h-5 text-white" strokeWidth={2.5} />
                 </div>
               </div>
-              <span className="font-bold text-xl bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                Harmony
-              </span>
-            </div>
+              <span className="font-semibold text-[15px] tracking-tight">Harmony</span>
+            </Link>
 
             <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-discord-muted hover:text-white transition-colors">Features</a>
-              <a href="#testimonials" className="text-discord-muted hover:text-white transition-colors">Testimonials</a>
-              <a href="#pricing" className="text-discord-muted hover:text-white transition-colors">Pricing</a>
+              <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors">Features</a>
+              <a href="#testimonials" className="text-sm text-white/60 hover:text-white transition-colors">Customers</a>
+              <a href="#pricing" className="text-sm text-white/60 hover:text-white transition-colors">Pricing</a>
+              <a href="#" className="text-sm text-white/60 hover:text-white transition-colors">Docs</a>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-3">
               <Link to="/login">
                 <Button 
                   variant="ghost" 
-                  className="text-white hover:bg-white/10 transition-all"
+                  size="sm"
+                  className="text-white/80 hover:text-white hover:bg-white/5 h-9 px-4"
                 >
                   Log In
                 </Button>
               </Link>
               <Link to="/register">
-                <Button className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg shadow-primary/25 transition-all transform hover:scale-105">
+                <Button 
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-white h-9 px-4 shadow-lg shadow-primary/20"
+                >
                   Get Started
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                  <ArrowRight className="ml-1.5 w-3.5 h-3.5" />
                 </Button>
               </Link>
             </div>
+
+            <button 
+              className="md:hidden text-white/80 hover:text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-[#0a0a0f]/95 backdrop-blur-xl border-t border-white/[0.08]">
+            <div className="px-6 py-6 space-y-4">
+              <a href="#features" className="block text-white/80 hover:text-white">Features</a>
+              <a href="#testimonials" className="block text-white/80 hover:text-white">Customers</a>
+              <a href="#pricing" className="block text-white/80 hover:text-white">Pricing</a>
+              <a href="#" className="block text-white/80 hover:text-white">Docs</a>
+              <div className="pt-4 space-y-3 border-t border-white/[0.08]">
+                <Link to="/login" className="block">
+                  <Button variant="ghost" className="w-full">Log In</Button>
+                </Link>
+                <Link to="/register" className="block">
+                  <Button className="w-full bg-primary hover:bg-primary/90">Get Started</Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
-      {/* Enhanced Hero Section */}
-      <div className="relative min-h-screen flex items-center justify-center px-4 pt-20">
-        {/* Animated Background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        </div>
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+        {/* Subtle Background */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+        <div className="absolute top-40 left-1/4 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
 
-        <div className="relative max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full mb-8 animate-fade-in">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            <span className="text-sm text-primary">50,000+ users online</span>
+        <div className="relative max-w-4xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full mb-6 backdrop-blur-sm">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <span className="text-xs font-medium text-white/90">Trusted by 50,000+ users worldwide</span>
           </div>
 
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-8 leading-tight animate-fade-in-up">
-            Your Community,
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-400 animate-gradient">
-              Connected
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
+            Where communities
+            <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary">
+              come together
             </span>
           </h1>
 
-          <p className="text-xl sm:text-2xl text-discord-muted mb-12 max-w-3xl mx-auto animate-fade-in-up animation-delay-200">
-            Experience the future of community communication with real-time messaging, 
-            voice channels, and powerful collaboration tools.
+          {/* Subheadline */}
+          <p className="text-lg sm:text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed">
+            A modern platform for real-time communication. Built for teams, communities, and creators who value simplicity and security.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-fade-in-up animation-delay-400">
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-16">
             <Link to="/register">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white text-lg px-10 py-7 shadow-2xl shadow-primary/25 transform hover:scale-105 transition-all"
+                className="bg-primary hover:bg-primary/90 text-white px-8 h-12 text-base shadow-xl shadow-primary/20"
               >
-                Start Free Trial
-                <ArrowRight className="ml-2 w-5 h-5" />
+                Get Started Free
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white/20 hover:bg-white/10 text-white text-lg px-10 py-7 backdrop-blur-sm"
-              onClick={scrollToFeatures}
+              className="border-white/20 hover:bg-white/5 text-white px-8 h-12 text-base"
+              onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Explore Features
             </Button>
           </div>
 
-          <div 
-            onClick={scrollToFeatures}
-            className="inline-flex flex-col items-center gap-2 cursor-pointer animate-bounce"
-          >
-            <span className="text-sm text-discord-muted">Scroll to explore</span>
-            <ChevronDown className="w-5 h-5 text-discord-muted" />
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/40">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-400" />
+              <span>No credit card required</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-400" />
+              <span>14-day free trial</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-400" />
+              <span>Cancel anytime</span>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Enhanced Features Grid */}
-      <div id="features" className="py-32 px-4 relative">
+      {/* Trusted By */}
+      <section className="py-12 px-6 border-y border-white/[0.08] bg-white/[0.02]">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-center text-xs uppercase tracking-wider text-white/40 mb-8">Trusted by teams at</p>
+          <div className="flex flex-wrap items-center justify-center gap-12">
+            {trustedBy.map((company, i) => (
+              <div key={i} className="text-white/30 font-medium text-sm">{company}</div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold mb-6">
-              Everything You Need to
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400"> Thrive</span>
+          <div className="text-center mb-16 max-w-3xl mx-auto">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
+              Everything you need to connect
             </h2>
-            <p className="text-xl text-discord-muted max-w-2xl mx-auto">
-              Powerful features designed for modern communities and teams
+            <p className="text-lg text-white/60">
+              Powerful features designed for modern communication, without the complexity.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <div
                 key={index}
                 className="group relative"
-                onMouseEnter={() => setActiveFeature(index)}
-                onMouseLeave={() => setActiveFeature(null)}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="relative bg-discord-darker/50 backdrop-blur-sm border border-white/5 rounded-2xl p-8 hover:border-primary/30 transition-all duration-300 hover:transform hover:-translate-y-2">
-                  <div className={`w-14 h-14 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform`}>
-                    <feature.icon className="w-7 h-7 text-white" />
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`} />
+                <div className="relative bg-white/[0.03] border border-white/[0.08] rounded-2xl p-8 hover:border-white/20 transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${feature.iconGradient} rounded-xl flex items-center justify-center mb-5 shadow-lg`}>
+                    <feature.icon className="w-6 h-6 text-white" strokeWidth={2} />
                   </div>
-                  <h3 className="text-2xl font-semibold mb-3">{feature.title}</h3>
-                  <p className="text-discord-muted leading-relaxed">
+                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <p className="text-white/60 text-[15px] leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -245,187 +309,150 @@ export default function Landing() {
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* New Testimonials Section */}
-      <div id="testimonials" className="py-32 px-4 bg-gradient-to-b from-transparent via-discord-darker/30 to-transparent">
+      {/* Stats Section */}
+      <section className="py-20 px-6 bg-gradient-to-b from-white/[0.02] to-transparent">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, i) => (
+              <div key={i} className="text-center group">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-white/5 rounded-xl mb-4 group-hover:bg-white/10 transition-colors">
+                  <stat.icon className="w-6 h-6 text-primary" strokeWidth={2} />
+                </div>
+                <div className="text-4xl font-bold mb-2 bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+                  {stat.value}
+                </div>
+                <p className="text-sm text-white/50">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold mb-6">Loved by Communities Worldwide</h2>
-            <p className="text-xl text-discord-muted">Join thousands of satisfied users</p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
+              Loved by teams worldwide
+            </h2>
+            <p className="text-lg text-white/60">See what our customers have to say</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-discord-darker/50 backdrop-blur-sm border border-white/5 rounded-2xl p-8 hover:border-primary/30 transition-all">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-primary text-primary" />
+              <div 
+                key={index} 
+                className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-8 hover:border-white/20 transition-all backdrop-blur-sm"
+              >
+                <div className="flex gap-1 mb-5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-primary text-primary" />
                   ))}
                 </div>
-                <p className="text-lg mb-6 text-white/90">"{testimonial.content}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-purple-500 rounded-full" />
+                <p className="text-[15px] leading-relaxed text-white/80 mb-6">
+                  "{testimonial.content}"
+                </p>
+                <div className="flex items-center gap-3 pt-4 border-t border-white/[0.08]">
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-purple-500 rounded-full flex items-center justify-center text-xs font-semibold">
+                    {testimonial.avatar}
+                  </div>
                   <div>
-                    <p className="font-semibold">{testimonial.name}</p>
-                    <p className="text-sm text-discord-muted">{testimonial.role}</p>
+                    <p className="font-medium text-sm">{testimonial.name}</p>
+                    <p className="text-xs text-white/50">{testimonial.role} · {testimonial.company}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Enhanced Stats Section */}
-      <div className="py-32 px-4 relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-purple-500/5" />
-        <div className="max-w-7xl mx-auto relative">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div className="group">
-              <div className="text-5xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform">
-                50K+
-              </div>
-              <p className="text-discord-muted text-lg">Active Users</p>
-            </div>
-            <div className="group">
-              <div className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform">
-                10M+
-              </div>
-              <p className="text-discord-muted text-lg">Messages Daily</p>
-            </div>
-            <div className="group">
-              <div className="text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform">
-                99.9%
-              </div>
-              <p className="text-discord-muted text-lg">Uptime</p>
-            </div>
-            <div className="group">
-              <div className="text-5xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform">
-                24/7
-              </div>
-              <p className="text-discord-muted text-lg">Support</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Enhanced CTA Section */}
-      <div className="py-32 px-4 relative">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-3xl" />
-        </div>
+      {/* Final CTA Section */}
+      <section className="py-24 px-6 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-purple-500/5 to-transparent" />
         <div className="max-w-3xl mx-auto text-center relative">
-          <h2 className="text-5xl font-bold mb-8">
-            Ready to Transform Your
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
-              Communication?
-            </span>
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight">
+            Ready to get started?
           </h2>
-          <p className="text-xl text-discord-muted mb-12">
+          <p className="text-lg text-white/60 mb-10">
             Join thousands of communities already using Harmony to connect and collaborate.
           </p>
           
-          <div className="bg-discord-darker/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-8">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-6">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <span className="text-white/90">No credit card required</span>
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <span className="text-white/90">14-day free trial</span>
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <span className="text-white/90">Cancel anytime</span>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register">
-                <Button 
-                  size="lg"
-                  className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white text-lg px-12 py-7 shadow-2xl shadow-primary/25 transform hover:scale-105 transition-all"
-                >
-                  Get Started Free
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button 
-                  size="lg"
-                  variant="outline" 
-                  className="border-white/20 hover:bg-white/10 text-white text-lg px-12 py-7"
-                >
-                  Sign In
-                </Button>
-              </Link>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+            <Link to="/register">
+              <Button 
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-white px-10 h-12 text-base shadow-xl shadow-primary/20"
+              >
+                Start Free Trial
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </Link>
+            <Link to="/login">
+              <Button 
+                size="lg"
+                variant="outline" 
+                className="border-white/20 hover:bg-white/5 text-white px-10 h-12 text-base"
+              >
+                Sign In
+              </Button>
+            </Link>
           </div>
-        </div>
-      </div>
 
-      {/* Enhanced Footer */}
-      <footer className="border-t border-white/5 bg-discord-darker/50 backdrop-blur-sm py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-5 gap-12 mb-12">
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/70 rounded-xl flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-white" />
+          <p className="text-sm text-white/40">
+            No credit card required · 14-day free trial · 99.9% uptime SLA
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative border-t border-white/[0.08]">
+        <div className="relative max-w-7xl mx-auto px-6 py-16">
+          <div className="flex flex-col items-center">
+            <Link to="/" className="inline-flex items-center gap-2.5 mb-8 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative w-11 h-11 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                  <MessageSquare className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
-                <span className="font-bold text-xl">Harmony</span>
               </div>
-              <p className="text-discord-muted mb-6 leading-relaxed">
-                Building the future of online communities with powerful, secure, and intuitive communication tools.
-              </p>
-              <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors">
-                  <Github className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors">
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
+              <span className="font-bold text-2xl tracking-tight">Harmony</span>
+            </Link>
             
-            <div>
-              <h4 className="font-semibold mb-6 text-white/90">Product</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Features</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Security</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Roadmap</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-6 text-white/90">Resources</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">API Reference</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Guides</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Support</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-6 text-white/90">Company</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="text-discord-muted hover:text-white transition-colors">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-discord-muted text-sm">
-              © 2024 Harmony. All rights reserved.
+            <p className="text-sm text-white/50 mb-8 text-center max-w-md">
+              Building the future of community communication
             </p>
-            <div className="flex gap-6 text-sm">
-              <a href="#" className="text-discord-muted hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="text-discord-muted hover:text-white transition-colors">Terms of Service</a>
-              <a href="#" className="text-discord-muted hover:text-white transition-colors">Cookie Policy</a>
+            
+            <div className="flex gap-4 mb-12">
+              <a href="#" className="relative w-11 h-11 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/20 rounded-xl flex items-center justify-center transition-all duration-300 group" aria-label="GitHub">
+                <Github className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" strokeWidth={2} />
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">GitHub</span>
+              </a>
+              <a href="#" className="relative w-11 h-11 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/20 rounded-xl flex items-center justify-center transition-all duration-300 group" aria-label="Twitter">
+                <Twitter className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" strokeWidth={2} />
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Twitter</span>
+              </a>
+              <a href="#" className="relative w-11 h-11 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/20 rounded-xl flex items-center justify-center transition-all duration-300 group" aria-label="LinkedIn">
+                <Linkedin className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" strokeWidth={2} />
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">LinkedIn</span>
+              </a>
+            </div>
+
+            <div className="flex flex-col items-center gap-6 pt-8 border-t border-white/[0.08] w-full">
+              <div className="flex flex-wrap items-center justify-center gap-6 text-xs">
+                <a href="#" className="text-white/40 hover:text-white/80 transition-colors">Privacy</a>
+                <span className="text-white/20">•</span>
+                <a href="#" className="text-white/40 hover:text-white/80 transition-colors">Terms</a>
+                <span className="text-white/20">•</span>
+                <a href="#" className="text-white/40 hover:text-white/80 transition-colors">Cookies</a>
+                <span className="text-white/20">•</span>
+                <a href="#" className="text-white/40 hover:text-white/80 transition-colors">Accessibility</a>
+              </div>
+              <p className="text-xs text-white/30">
+                © 2024 Harmony Technologies, Inc. All rights reserved.
+              </p>
             </div>
           </div>
         </div>
