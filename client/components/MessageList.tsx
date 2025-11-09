@@ -26,16 +26,14 @@ export function MessageList({ channelId, channelType = 'text', serverId }: Messa
   const [userRoles, setUserRoles] = useState<Record<string, MemberRole[]>>({});
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [channelId, messages]);
 
   useEffect(() => {
     if (serverId && messages.length > 0) {
@@ -153,7 +151,7 @@ export function MessageList({ channelId, channelType = 'text', serverId }: Messa
   return (
     <div className="flex-1 flex flex-col bg-discord-dark">
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-discord-muted">Loading messages...</div>
@@ -289,7 +287,6 @@ export function MessageList({ channelId, channelType = 'text', serverId }: Messa
             </div>
           ))
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
