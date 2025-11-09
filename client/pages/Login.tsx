@@ -53,7 +53,7 @@ export default function Login() {
         <div className="relative p-8">
           {/* Logo/Brand */}
           <div className="flex justify-center mb-6">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center cursor-pointer" onClick={() => navigate('/')}>
               <img src="/Harmonny.png" alt="Harmony" className="w-12 h-12" />
             </div>
           </div>
