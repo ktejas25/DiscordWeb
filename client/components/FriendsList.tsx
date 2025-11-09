@@ -31,8 +31,9 @@ export function FriendsList({ onStartDM }: FriendsListProps) {
       setSearchUsername('');
       setIsAddOpen(false);
       toast.success('Friend request sent!');
-    } catch (error) {
-      toast.error('Failed to send friend request');
+    } catch (error: any) {
+      const message = error?.message || 'Failed to send friend request';
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

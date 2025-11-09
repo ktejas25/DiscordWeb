@@ -40,8 +40,9 @@ export function DMList({ selectedConversationId, onConversationSelect }: DMListP
       toast.success(`Started conversation with ${targetUser.username}`);
       setSearchUsername('');
       setIsCreateOpen(false);
-    } catch (error) {
-      toast.error('Failed to start conversation');
+    } catch (error: any) {
+      const message = error?.message || 'Failed to start conversation';
+      toast.error(message);
     }
   };
 

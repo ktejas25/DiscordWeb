@@ -36,8 +36,8 @@ export function PrivacyPage() {
             <p className="text-sm text-discord-muted">Let others send you friend requests</p>
           </div>
           <Switch
-            checked={settings?.settings?.privacy?.showActivityStatus ?? true}
-            onCheckedChange={(v) => handleToggle('showActivityStatus', v)}
+            checked={settings?.settings?.privacy?.allowFriendRequests ?? true}
+            onCheckedChange={(v) => handleToggle('allowFriendRequests', v)}
           />
         </div>
       </div>

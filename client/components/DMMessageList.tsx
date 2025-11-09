@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface DMMessageListProps {
   conversationId: string | null;
@@ -26,8 +27,10 @@ export function DMMessageList({ conversationId }: DMMessageListProps) {
     try {
       await sendMessage(user.id, newMessage);
       setNewMessage('');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to send message:', error);
+      const message = error?.message || 'Failed to send message';
+      toast.error(message);
     }
   };
 

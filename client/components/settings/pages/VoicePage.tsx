@@ -3,18 +3,24 @@ import { useSettings } from '@/hooks/useSettings';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { toast } from '@/components/ui/use-toast';
 
 export function VoicePage() {
   const { settings, updateSettings } = useSettings();
   const [devices, setDevices] = useState<{ input: MediaDeviceInfo[], output: MediaDeviceInfo[] }>({ input: [], output: [] });
+  const [hasMediaDevices, setHasMediaDevices] = useState(true);
 
   useEffect(() => {
+    if (!navigator.mediaDevices) {
+      setHasMediaDevices(false);
+      return;
+    }
     navigator.mediaDevices.enumerateDevices().then(d => {
       setDevices({
         input: d.filter(dev => dev.kind === 'audioinput'),
         output: d.filter(dev => dev.kind === 'audiooutput')
       });
-    });
+    }).catch(() => setHasMediaDevices(false));
   }, []);
 
   return (
@@ -23,6 +29,11 @@ export function VoicePage() {
         <h2 className="text-2xl font-bold text-white mb-2">Voice & Audio</h2>
         <p className="text-discord-muted">Configure voice and audio settings</p>
       </div>
+      {!hasMediaDevices && (
+        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded p-4 text-yellow-500">
+          Media devices are not available in your browser. Voice features may not work.
+        </div>
+      )}
 
       <div className="space-y-4">
         <div>
@@ -58,9 +69,9 @@ export function VoicePage() {
         </div>
 
         <div>
-          <Label className="text-white">Input Volume</Label>
+          <Label className="text-white">Input Volume: {settings?.settings?.voice?.inputVolume ?? 100}%</Label>
           <Slider
-            value={[settings?.settings?.voice?.inputVolume || 100]}
+            value={[settings?.settings?.voice?.inputVolume ?? 100]}
             onValueChange={([v]) => updateSettings({ voice: { ...settings?.settings?.voice, inputVolume: v } })}
             max={100}
             step={1}

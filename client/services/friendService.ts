@@ -24,12 +24,23 @@ export const friendService = {
     try {
       // Find recipient by username
       const { data: recipientData, error: userError } = await supabase
-        .from('users')
+        .from('profiles')
         .select('id')
         .eq('username', recipientUsername)
         .single();
 
       if (userError) throw new Error('User not found');
+
+      // Check recipient's privacy settings
+      const { data: recipientSettings } = await supabase
+        .from('user_settings')
+        .select('settings')
+        .eq('user_id', recipientData.id)
+        .single();
+      
+      if (recipientSettings?.settings?.privacy?.allowFriendRequests === false) {
+        throw new Error('This user does not accept friend requests.');
+      }
 
       const { data, error } = await supabase
         .from('friendships')

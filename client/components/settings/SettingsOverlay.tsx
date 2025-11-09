@@ -49,9 +49,13 @@ export function SettingsOverlay() {
     }
   };
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) closeSettings();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center" onClick={closeSettings}>
-      <div className="w-full h-full flex" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center" onClick={handleBackdropClick}>
+      <div className="w-full h-full flex">
         <SettingsNav />
         <div className="flex-1 flex flex-col bg-discord-dark">
           <div className="flex items-center justify-between p-4 border-b border-discord-darker">

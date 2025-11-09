@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { SettingsOverlay } from "@/components/settings/SettingsOverlay";
 import { socketService } from "@/services/socketService";
 import { useEffect, Component, ReactNode } from "react";
+import { useTheme } from "@/hooks/useTheme";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -52,7 +53,8 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   }
 }
 
-export function App() {
+function AppContent() {
+  useTheme();
   useEffect(() => {
     try {
       socketService.connect();
@@ -61,40 +63,46 @@ export function App() {
     }
   }, []);
   return (
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <SettingsOverlay />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/app/channels"
+            element={
+              <ProtectedRoute>
+                <Channels />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/friends"
+            element={
+              <ProtectedRoute>
+                <Friends />
+              </ProtectedRoute>
+            }
+          />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  );
+}
+
+export function App() {
+  return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <SettingsProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <SettingsOverlay />
-                <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/app/channels"
-                element={
-                  <ProtectedRoute>
-                    <Channels />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/app/friends"
-                element={
-                  <ProtectedRoute>
-                    <Friends />
-                  </ProtectedRoute>
-                }
-              />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
+            <AppContent />
           </SettingsProvider>
         </AuthProvider>
       </QueryClientProvider>

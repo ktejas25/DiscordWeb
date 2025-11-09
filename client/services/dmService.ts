@@ -167,6 +167,27 @@ export const dmService = {
 
   async sendDMMessage(conversationId: string, authorId: string, content: string) {
     try {
+      // Get recipient from conversation
+      const { data: participants } = await supabase
+        .from('dm_participants')
+        .select('user_id')
+        .eq('conversation_id', conversationId)
+        .neq('user_id', authorId);
+      
+      if (participants && participants.length > 0) {
+        const recipientId = participants[0].user_id;
+        // Check recipient's privacy settings
+        const { data: recipientSettings } = await supabase
+          .from('user_settings')
+          .select('settings')
+          .eq('user_id', recipientId)
+          .single();
+        
+        if (recipientSettings?.settings?.privacy?.allowDMsFromServerMembers === false) {
+          throw new Error('This user does not accept direct messages.');
+        }
+      }
+
       const { data, error } = await supabase
         .from('dm_messages')
         .insert([{ conversation_id: conversationId, author_id: authorId, content }])

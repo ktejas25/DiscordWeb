@@ -20,10 +20,14 @@ export interface UserSettings {
 const defaultSettings = {
   theme: 'system',
   locale: 'en',
+  fontSize: 'medium',
   reducedMotion: false,
   notifications: { enableSounds: true, desktopPush: false },
-  privacy: { allowDMsFromServerMembers: true, showActivityStatus: true },
-  appearance: { messageDisplay: 'cozy', fontScale: 1.0 }
+  privacy: { allowDMsFromServerMembers: true, allowFriendRequests: true },
+  textImages: { linkPreviews: true, showEmoji: true },
+  voice: { inputVolume: 100, inputDevice: 'default', outputDevice: 'default' },
+  advanced: { developerMode: false, debugLogs: false },
+  keybinds: { pushToTalk: '', toggleMute: '' }
 };
 
 export function useSettings() {
@@ -47,9 +51,9 @@ export function useSettings() {
         .from('user_settings')
         .select('*')
         .eq('user_id', user!.id)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
 
       if (!data) {
         const { data: newSettings, error: insertError } = await supabase

@@ -2,13 +2,32 @@ import React from 'react';
 import { useSettings } from '@/hooks/useSettings';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { toast } from '@/components/ui/use-toast';
 
 export function NotificationsPage() {
   const { settings, updateSettings } = useSettings();
 
   const handleToggle = async (key: string, value: boolean) => {
+    if (key === 'desktopPush' && value) {
+      if (!('Notification' in window)) {
+        toast({ title: 'Notifications not supported', description: 'Your browser does not support notifications.', variant: 'destructive' });
+        return;
+      }
+      if (Notification.permission === 'denied') {
+        toast({ title: 'Notifications blocked', description: 'Please enable notifications in your browser settings.', variant: 'destructive' });
+        return;
+      }
+      if (Notification.permission === 'default') {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          toast({ title: 'Permission denied', description: 'Notification permission was not granted.', variant: 'destructive' });
+          return;
+        }
+      }
+    }
     const notifications = { ...settings?.settings?.notifications, [key]: value };
     await updateSettings({ notifications });
+    toast({ title: 'Settings updated', description: `${key === 'enableSounds' ? 'Sounds' : 'Desktop notifications'} ${value ? 'enabled' : 'disabled'}.` });
   };
 
   return (

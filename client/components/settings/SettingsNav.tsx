@@ -2,6 +2,7 @@ import React from 'react';
 import { useSettingsModal } from '@/contexts/SettingsContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { LogOut, Trash2 } from 'lucide-react';
+import { useTranslation } from '@/i18n/useTranslation';
 
 const sections = [
   { id: 'my-account', label: 'My Account', category: 'User Settings' },
@@ -21,6 +22,7 @@ const sections = [
 export function SettingsNav() {
   const { currentSection, setSection, closeSettings } = useSettingsModal();
   const { logout } = useAuth();
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     await logout();
@@ -46,7 +48,7 @@ export function SettingsNav() {
                     : 'text-discord-muted hover:bg-discord-dark/50 hover:text-white'
                 }`}
               >
-                {section.label}
+                {t(section.label as any)}
               </button>
             ))}
           </div>
@@ -58,7 +60,7 @@ export function SettingsNav() {
           className="w-full flex items-center gap-2 px-3 py-2 rounded text-sm text-red-400 hover:bg-discord-dark transition"
         >
           <LogOut className="w-4 h-4" />
-          Log Out
+          {t('Log Out')}
         </button>
       </div>
     </div>

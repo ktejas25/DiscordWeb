@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSettings } from '@/hooks/useSettings';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -6,16 +6,36 @@ import { Button } from '@/components/ui/button';
 export function KeybindsPage() {
   const { settings, updateSettings } = useSettings();
   const [recording, setRecording] = useState<string | null>(null);
+  const handlerRef = useRef<((e: KeyboardEvent) => void) | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (handlerRef.current) {
+        window.removeEventListener('keydown', handlerRef.current);
+      }
+    };
+  }, []);
 
   const handleRecord = (key: string) => {
+    if (handlerRef.current) {
+      window.removeEventListener('keydown', handlerRef.current);
+    }
     setRecording(key);
     const handler = (e: KeyboardEvent) => {
       e.preventDefault();
-      const keybinds = { ...settings?.settings?.keybinds, [key]: e.key };
+      if (e.key === 'Escape') {
+        setRecording(null);
+        window.removeEventListener('keydown', handler);
+        handlerRef.current = null;
+        return;
+      }
+      const keybinds = { ...settings?.settings?.keybinds, [key]: e.code };
       updateSettings({ keybinds });
       setRecording(null);
       window.removeEventListener('keydown', handler);
+      handlerRef.current = null;
     };
+    handlerRef.current = handler;
     window.addEventListener('keydown', handler);
   };
 

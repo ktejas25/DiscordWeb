@@ -27,8 +27,10 @@
     "axios": "^1.12.2",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "i18next": "^25.6.1",
     "livekit-client": "^2.15.13",
     "livekit-server-sdk": "^2.14.0",
+    "react-i18next": "^16.2.4",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "zod": "^3.25.76"

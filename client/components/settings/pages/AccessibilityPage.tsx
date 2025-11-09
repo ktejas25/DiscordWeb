@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSettings } from '@/hooks/useSettings';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 
 export function AccessibilityPage() {
   const { settings, updateSettings } = useSettings();
+
+  useEffect(() => {
+    const reducedMotion = settings?.settings?.reducedMotion ?? false;
+    document.documentElement.classList.toggle('reduce-motion', reducedMotion);
+  }, [settings?.settings?.reducedMotion]);
+
+  const handleToggle = (value: boolean) => {
+    updateSettings({ reducedMotion: value });
+    document.documentElement.classList.toggle('reduce-motion', value);
+  };
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -21,7 +31,7 @@ export function AccessibilityPage() {
           </div>
           <Switch
             checked={settings?.settings?.reducedMotion ?? false}
-            onCheckedChange={(v) => updateSettings({ reducedMotion: v })}
+            onCheckedChange={handleToggle}
           />
         </div>
       </div>
