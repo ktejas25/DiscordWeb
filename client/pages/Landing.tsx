@@ -125,24 +125,30 @@ export default function Landing() {
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/[0.08]' 
+          ? 'bg-[#0a0a0f]/95 backdrop-blur-2xl border-b border-white/10 shadow-lg shadow-black/20' 
           : 'bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="flex items-center justify-between h-20">
+            <Link to="/" className="flex items-center gap-3 group">
               <div className="relative">
-                <div className="absolute inset-0 bg-primary/40 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative w-9 h-9 rounded-lg flex items-center justify-center">
-                  <img src="/Harmonny.png" alt="Harmony" className="w-9 h-9" />
+                <div className="absolute inset-0 bg-primary/30 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary/10 to-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <img src="/Harmonny.png" alt="Harmony" className="w-10 h-10" />
                 </div>
               </div>
-              <span className="font-semibold text-[15px] tracking-tight">Harmony</span>
+              <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">Harmony</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-5">
-              <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors">Features</a>
-              <a href="#testimonials" className="text-sm text-white/60 hover:text-white transition-colors">Customers</a>
+            <div className="hidden md:flex items-center gap-8">
+              <a href="#features" className="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200 relative group">
+                Features
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
+              </a>
+              <a href="#testimonials" className="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200 relative group">
+                Customers
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
+              </a>
             </div>
 
             <div className="hidden md:flex items-center gap-3">
@@ -150,7 +156,7 @@ export default function Landing() {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="text-white/80 hover:text-white hover:bg-white/5 h-9 px-4"
+                  className="text-white/90 hover:text-white hover:bg-white/10 h-10 px-5 font-medium rounded-lg transition-all duration-200"
                 >
                   Log In
                 </Button>
@@ -158,16 +164,16 @@ export default function Landing() {
               <Link to="/register">
                 <Button 
                   size="sm"
-                  className="bg-primary hover:bg-primary/90 text-white h-9 px-4 shadow-lg shadow-primary/20"
+                  className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 text-white h-10 px-5 font-medium rounded-lg shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-105 transition-all duration-200"
                 >
                   Get Started
-                  <ArrowRight className="ml-1.5 w-3.5 h-3.5" />
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>
 
             <button 
-              className="md:hidden text-white/80 hover:text-white"
+              className="md:hidden text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-all duration-200"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -177,18 +183,16 @@ export default function Landing() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-[#0a0a0f]/95 backdrop-blur-xl border-t border-white/[0.08]">
-            <div className="px-6 py-6 space-y-4">
-              <a href="#features" className="block text-white/80 hover:text-white">Features</a>
-              <a href="#testimonials" className="block text-white/80 hover:text-white">Customers</a>
-              <a href="#pricing" className="block text-white/80 hover:text-white">Pricing</a>
-              <a href="#" className="block text-white/80 hover:text-white">Docs</a>
-              <div className="pt-4 space-y-3 border-t border-white/[0.08]">
-                <Link to="/login" className="block">
-                  <Button variant="ghost" className="w-full">Log In</Button>
+          <div className="md:hidden bg-[#0a0a0f]/98 backdrop-blur-2xl border-t border-white/10 shadow-xl animate-in slide-in-from-top-2 duration-200">
+            <div className="px-6 py-6 space-y-1">
+              <a href="#features" className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 font-medium" onClick={() => setMobileMenuOpen(false)}>Features</a>
+              <a href="#testimonials" className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 font-medium" onClick={() => setMobileMenuOpen(false)}>Customers</a>
+              <div className="pt-4 space-y-3 border-t border-white/10 mt-4">
+                <Link to="/login" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full h-11 hover:bg-white/10 font-medium">Log In</Button>
                 </Link>
-                <Link to="/register" className="block">
-                  <Button className="w-full bg-primary hover:bg-primary/90">Get Started</Button>
+                <Link to="/register" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full h-11 bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 font-medium shadow-lg shadow-primary/25">Get Started</Button>
                 </Link>
               </div>
             </div>
@@ -245,16 +249,16 @@ export default function Landing() {
           </div>
 
           {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/40">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-white/40">
+            <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="w-4 h-4 text-green-400" />
               <span>No credit card required</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="w-4 h-4 text-green-400" />
               <span>14-day free trial</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="w-4 h-4 text-green-400" />
               <span>Cancel anytime</span>
             </div>
