@@ -134,7 +134,7 @@ export default function Landing() {
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/30 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-300" />
                 <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary/10 to-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <img src="/Harmonny.png" alt="Harmony" className="w-10 h-10" />
+                  <img src="/Harmony.png" alt="Harmony" className="w-10 h-10" />
                 </div>
               </div>
               <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">Harmony</span>
@@ -404,7 +404,7 @@ export default function Landing() {
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative w-11 h-11 rounded-xl flex items-center justify-center">
-                  <img src="/Harmonny.png" alt="Harmony" className="w-11 h-11" />
+                  <img src="/Harmony.png" alt="Harmony" className="w-11 h-11" />
                 </div>
               </div>
               <span className="font-bold text-2xl tracking-tight">Harmony</span>
