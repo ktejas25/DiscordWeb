@@ -1,9 +1,12 @@
-import { RequestHandler } from "express";
+import { RequestHandler, Request, Response, NextFunction } from "express";
 import { createClient } from '@supabase/supabase-js';
+import { config } from '../config';
+import { logger } from '../utils/logger';
+import { AppError, UnauthorizedError } from '../utils/errors';
 
 const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
+  config.database.url,
+  config.database.serviceKey
 );
 
 export const authenticateToken: RequestHandler = async (req, res, next) => {
@@ -11,32 +14,41 @@ export const authenticateToken: RequestHandler = async (req, res, next) => {
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ error: "Unauthorized", message: "No token provided" });
-    return;
+    return next(new UnauthorizedError('No token provided'));
   }
 
   try {
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) {
-      res.status(403).json({ error: "Forbidden", message: "Invalid token" });
-      return;
+      return next(new UnauthorizedError('Invalid token'));
     }
     (req as any).user = user;
     next();
   } catch (error) {
-    res.status(403).json({ error: "Forbidden", message: "Invalid token" });
+    next(new UnauthorizedError('Invalid token'));
   }
 };
 
-export const errorHandler: any = (err: any, req: any, res: any, next: any) => {
-  console.error("Error:", err);
-
-  const status = err.status || 500;
-  const message = err.message || "Internal server error";
-
-  res.status(status).json({
-    error: err.type || "Error",
+export const errorHandler = (err: Error | AppError, req: Request, res: Response, next: NextFunction) => {
+  const isAppError = err instanceof AppError;
+  const statusCode = isAppError ? err.statusCode : 500;
+  const code = isAppError ? err.code : 'INTERNAL_ERROR';
+  const message = err.message || 'Internal server error';
+  
+  logger.error('Request error', {
+    statusCode,
+    code,
     message,
-    status,
+    path: req.path,
+    method: req.method,
+    stack: config.server.nodeEnv === 'development' ? err.stack : undefined,
+  });
+
+  res.status(statusCode).json({
+    error: {
+      code,
+      message,
+      details: isAppError ? (err as AppError).details : undefined,
+    },
   });
 };
