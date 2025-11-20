@@ -1,0 +1,7 @@
+{
+  "command": "npm run dev",
+  "serverUrl": "https://b9c318048b794fd0bca3777e2ed57b67-e556de2534dd479d901b6c8cf.fly.dev/",
+  "authenticateProxy": false,
+  "autoDetectDevServer": true,
+  "commitMode": "commits"
+}
